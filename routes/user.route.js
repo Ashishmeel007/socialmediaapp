@@ -2,6 +2,8 @@ const express = require('express');
 const {UserModel} = require("../models/user.model");
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
+require("dotenv").config();
+
 
 const userRouter = express.Router();
 
@@ -35,7 +37,7 @@ userRouter.post("/login", async(req,res)=>{
         if(user){
             bcrypt.compare(pass,user.pass,(err,result)=>{
                 if(result){
-                    let token = jwt.sign({userID:user._id,user:user.name},"masai");
+                    let token = jwt.sign({userID:user._id,user:user.name},process.env.secretKey);
                     res.status(200).json({msg:"Logged In!!",token});
                 }else{
                     res.status(400).json({msg:"Wrong Credentials!"})
